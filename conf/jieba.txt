@@ -1,0 +1,5 @@
+dict_path = "/home/lanlan/program/Include/cppjieba/dict/jieba.dict.utf8"
+hmm_path = "/home/lanlan/program/Include/cppjieba/dict/hmm_model.utf8"
+user_dict_path = "/home/lanlan/program/Include/cppjieba/dict/user.dict.utf8"
+idf_path = "/home/lanlan/program/Include/cppjieba/dict/idf.utf8"
+stop_words_path = "/home/lanlan/program/Include/cppjieba/dict/stop_words.utf8"

@@ -1,0 +1,23 @@
+#ifndef __SOCKET_H__
+#define __SOCKET_H__
+#include <sys/socket.h>
+#include <sys/types.h>
+
+#include <stdio.h>
+#include <unistd.h>
+#include "NonCopyable.h"
+class Socket:
+public NonCopyable
+{
+    public:
+    Socket();
+    explicit Socket(int fd);
+    ~Socket();
+    int get_fd();
+
+    private:
+    int _fd;
+};
+
+
+#endif
