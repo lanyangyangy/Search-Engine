@@ -70,6 +70,9 @@ void DictProducer::deal_ch_words()  //处理中文文章
 void DictProducer::ClearEngWords(string& words) //清洗数据
 {   
     words.erase(std::remove_if(words.begin(), words.end(), ispunct), words.end()); //去除标点符号
+
+
+    
     transform(words.begin(),words.end(),words.begin(),::tolower);
 }
 vector<string> DictProducer::ClearChWords() //清洗数据
@@ -178,8 +181,18 @@ string DictProducer::getFiles()  //获取文件的绝对路径
 {
     return fs::current_path(); 
 }
-void DictProducer::pushDict(const string& word,const set<string> stop_worlds, vector<pair<string, int>>& dict)//存储某个单词
+void DictProducer::pushDict(string& word,const set<string> stop_worlds, vector<pair<string, int>>& dict)//存储某个单词
 {
+    // if(word.find(' ')!=std::string::npos)
+    // word.erase(word.find(' '));
+    for(auto i: word)
+    {
+        if(isspace(i))
+        {
+            word.erase(word.find(i),1);
+        }
+    }
+    
     if(stop_worlds.find(word) == stop_worlds.end())
     {
         for(int i = 0; i< dict.size(); i++)
@@ -247,6 +260,10 @@ return (c >= 0xE3 && c <= 0xE9);
 bool isChineseWord(unsigned char c) {
 return (c >= 0xE4 && c <= 0xE9);
 
+}
+bool isChinesepunct(int c)
+{
+    return c <= 0xE4&&c >= 0xE3;
 }
 
 void show_string(const string& words)

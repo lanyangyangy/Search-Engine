@@ -25,7 +25,8 @@ using std::istringstream;
 
 bool isChineseChar(unsigned char c);  //区分中文英文，但中文里仍有符号
 bool isChineseWord(unsigned char c); //区分中文和中文符号
-void show_string(const string& words);
+void show_string(const string& words); //输出字符
+bool isChinesepunct(int c);
 class DictProducer
 {
 private:
@@ -50,7 +51,7 @@ public:
     void readfile();//读取文本
     void doFiles(const string& dir);//处理文件路径
     void pushStopWord(const string& stop_world_dir,bool is_ch);//存放stopword
-    void pushDict(const string& word,const set<string> stop_worlds, vector<pair<string, int>>& dict);//存储某个单词
+    void pushDict(string& word,const set<string> stop_worlds, vector<pair<string, int>>& dict);//存储某个单词
     void pushIndex(const string& word,map<string, set<int>>& index,const int idx);//存储词典索引
     void storeDict(const string filepath, const vector<pair<string, int>> dict);  //将词典写入文件
     void storeIndex(const string filepath, const map<std::string, std::set<int>> index);  //将索引写入文件
