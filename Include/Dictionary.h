@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <sstream>
 #include <cstring>
-
+#include "DictProducer.h"
 
 namespace fs = std::filesystem;
 using std::endl;
@@ -26,6 +26,9 @@ using std::vector;
 using std::string;
 using std::getline;
 
+// bool isChineseChar(unsigned char c);  //区分中文英文，但中文里仍有符号
+// bool isChineseWord(unsigned char c); //区分中文和中文符号
+
 void Split(string str, char separator, vector<string> &output);
 class Dictionary
 {
@@ -40,7 +43,7 @@ class Dictionary
     public:
 
     static Dictionary* _pInstance;
-    vector<pair<string, int> > & getDict(); //获取词典
+    int  getDict(const string& word); //获取词典
     map<string, set<int> > & getIndexTable(); //获取索引表
     set<string> doQuery(string word); //执行查询
     static Dictionary * createInstance();

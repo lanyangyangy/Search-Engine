@@ -2,42 +2,47 @@
 #include "cppjieba/Jieba.hpp"
 #include "SplitTool.h"
 #include "KeyRecommander.h"
-string getFiles()  //获取文件的绝对路径
+#include "Reactor/EchoServer.h"
+#include "KeyAche.h"
+
+int main(int argc, char **argv)
 {
-    return fs::current_path(); 
-}
-int main()
-{
-    
     // SplitToolCppJieba* tool = new SplitToolCppJieba();
     // DictProducer dict("./data/yuliao",tool);
-    KeyRecommander key("hello");
-    key.show();
-
+    // KeyRecommander key("hello",nullptr);
+    
+    EchoServer server(4, 10, "127.0.0.1", 1234);
+    server.start();
 
     return 0;
 }
-// #include "DictProducer.h"
-// #include "cppjieba/Jieba.hpp"
-// #include "SplitTool.h"
-// #include "KeyRecommander.h"
-// string getFiles()  //获取文件的绝对路径
-// {
-//     return fs::current_path(); 
-// }
-// int main()
-// {
-//     SplitToolCppJieba _tool();
-//     DictProducer _dict("../data/yuliao",&_tool);
-//     KeyRecommander key("hello");
-//     key.show();
-// //     }
 
-
+// int main(int argc, char **argv)
+// {
+//     SplitToolCppJieba* tool = new SplitToolCppJieba();
+//     DictProducer dict("./data/yuliao",tool);
+//     KeyAche ke();
+//     KeyRecommander key("hello",nullptr,ke);
+    
+//     // EchoServer server(4, 10, "127.0.0.1", 1234);
+//     // server.start();
 
 //     return 0;
 // }
 
+// #include <iostream>
+// #include <vector>
+// #include <string>
+// #include <sw/redis++/redis++.h>
+// #include <nlohmann/json.hpp> // 引入 json 库
 
+// using namespace std;
+// using namespace sw::redis;
+// using json = nlohmann::json;
 
-
+// int main() {
+//    KeyAche ke;
+//    map<string,int> word = {{"hh",10},{"h",11}};
+//    ke.add(make_pair("hello",word));
+//     return 0;
+// }

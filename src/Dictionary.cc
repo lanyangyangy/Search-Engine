@@ -6,34 +6,116 @@ Dictionary::Dictionary() //通过词典文件路径初始化词典
 {
     readfiles();
 }
-vector<pair<string, int> > & Dictionary::getDict() //获取词典
+int  Dictionary::getDict(const string& word) //获取词典
 {
-        return this->_dict;
+    for(int i=0; i< _dict.size(); i++)
+    {
+        if(word == _dict.at(i).first)
+        {
+            return _dict.at(i).second;
+        }
+    }
+
+        return 0;
 }
 map<string, set<int> > & Dictionary::getIndexTable() //获取索引表
 {
         return this->_index;
 }
-set<string> Dictionary::doQuery(string word) //执行查询
-{
+// set<string> Dictionary::doQuery(string word) //执行查询
+// {
     
+//     set<string> ans;
+//     if(isChineseWord(word[0]))
+//     {
+//         for(int i=0; i< word.size();i+=3)
+//         {
+//             auto search1 = _index.find(word.substr(i,3));
+//             if(search1 != _index.end())
+//             {
+//                 for (map<string, set<int>>::iterator it = _index.begin(); it != _index.end(); ++it)
+//                 {
+//                    if( it->first.find(word.substr(i,3)))
+//                    {
+//                         for(auto &j: _index[it->first])
+//                         {
+//                             cout<< _dict[j].first<<endl;
+//                             ans.insert(_dict[j].first);
+//                         }
+//                    }
+//                 }
+
+
+//             }
+//         }
+//     }
+//     else{
+//             for(auto &i : word)
+//             {
+//                 auto search1=_index.find(string(1,i));
+//                 if(  search1 != _index.end() )
+//                 { 
+//                     for(auto &j: _index[string(1,i)])
+//                     {
+//                         ans.insert(_dict[j].first);
+//                     }
+
+//                 }
+//             }
+//     }
+       
+//     return ans;
+// }
+
+set<string> Dictionary::doQuery(string word) 
+{
     set<string> ans;
 
-    for(auto &i : word)
-    {
-        auto search1=_index.find(string(1,i));
-        if(  search1 != _index.end() )
-        { 
-            for(auto &j: _index[string(1,i)])
-            {
-                ans.insert(_dict[j].first);
-            }
 
+    if (word.empty()) {
+        return ans; // 如果全是空格换行，直接返回
+    }
+
+    // 先整体查一次词组
+    auto search_whole = _index.find(word);
+    if (search_whole != _index.end()) {
+        for (auto &j : search_whole->second) {
+            ans.insert(_dict[j].first);
         }
     }
 
-       
-    
+    int i = 0;
+    while (i < word.length()) 
+    {
+        int step = 1;
+        unsigned char c = (unsigned char)word[i];
+        
+        if ((c & 0x80) == 0) {
+            step = 1; // 英文/数字
+        } else if ((c & 0xE0) == 0xC0) {
+            step = 2; // 拉丁/希腊文
+        } else if ((c & 0xF0) == 0xE0) {
+            step = 3; // 常见汉字
+        } else if ((c & 0xF8) == 0xF0) {
+            step = 4; // Emoji/生僻字
+        } else {
+            step = 1; // 兜底防止死循环
+        }
+
+        string ch = word.substr(i, step);
+        
+        cout << "[Debug] 正在倒排索引中查找切分字符: [" << ch << "]" << endl;
+
+        auto search_char = _index.find(ch);
+        if (search_char != _index.end()) {
+            for (auto &j : search_char->second) {
+                ans.insert(_dict[j].first);
+                cout<<  _dict[j].first;
+            }
+        }
+        i += step;
+    }
+
     return ans;
 }
 Dictionary * Dictionary::createInstance()
@@ -166,4 +248,13 @@ void Split(string str, char separator, vector<string> &output)
         }
     }
 }
+
+// bool isChineseChar(unsigned char c) {
+// return (c >= 0xE3 && c <= 0xE9);
+
+// }
+// bool isChineseWord(unsigned char c) {
+// return (c >= 0xE4 && c <= 0xE9);
+
+// }
 

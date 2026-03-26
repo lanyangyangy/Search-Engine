@@ -7,9 +7,13 @@ DictProducer::DictProducer(const string& dir,SplitTool* SplitTool):_tool(SplitTo
     pushStopWord(_dir_now + "/stop_words_eng.txt",0);
     pushStopWord(_dir_now + "/stop_words_zh.txt",true);
     readfile();
-    deal_eng_words();
-    deal_ch_words();
+    ClearEngWords();
 
+    bulidDict();
+    buildIndex();
+
+    storeDict("./data/dict.dat",_dict);
+    storeIndex("./data/dictIndex.dat",_index);
     
     cout<<endl;
 
@@ -34,46 +38,32 @@ void DictProducer::readfile()
             while (std::getline(ifs, line)) {   // 每次读取一行（不含换行符）
                 for(int i=0; i< line.size(); )
                 {
-                    if(isChineseChar(line[i]))
+                    
+                        if(isChineseChar(line[i]))
                     {
                         
                         _ch_words.append(line.substr(i,3));
                         i +=3;
                     }
-                    else
-                    {
-                        _eng_words.push_back(line[i++]);
-                    }
+                        else
+                        {
+                            _eng_words.push_back(line[i++]);
+                            
+                        }     
                 }
+                _eng_words.push_back(' ');
             }
             ifs.close();
         }
     } 
 }
-void DictProducer::deal_eng_words() //处理英文文章
-{
-    ClearEngWords(_eng_words);   
-    buildEnDdict();
-    buildEnIndex();
-    storeDict("./data/dict.dat",_eng_dict);
-    storeIndex("./data/dictIndex.dat",_eng_index);
 
-}
-void DictProducer::deal_ch_words()  //处理中文文章
-{
-    buildCnDict();
-    buildChIndex();
-    storeDict("./data/dict.dat",_ch_dict);
-    storeIndex("./data/dictIndex.dat",_ch_index);
-}
 
-void DictProducer::ClearEngWords(string& words) //清洗数据
+void DictProducer::ClearEngWords() //清洗数据
 {   
-    words.erase(std::remove_if(words.begin(), words.end(), ispunct), words.end()); //去除标点符号
-
-
-    
-    transform(words.begin(),words.end(),words.begin(),::tolower);
+    std::replace(_eng_words.begin(), _eng_words.end(), '-', ' ');
+    _eng_words.erase(std::remove_if(_eng_words.begin(), _eng_words.end(), ispunct), _eng_words.end()); //去除标点符号
+    transform(_eng_words.begin(),_eng_words.end(),_eng_words.begin(),::tolower);
 }
 vector<string> DictProducer::ClearChWords() //清洗数据
 {
@@ -91,13 +81,19 @@ vector<string> DictProducer::ClearChWords() //清洗数据
     return tmp;
 }
 
+void DictProducer::bulidDict()
+{
+        buildEnDdict();
+        buildCnDict();
+}
 void DictProducer::buildEnDdict()  //创建英文字典
 {   
     istringstream iss(_eng_words);  //放入字典
     string tmp;
     while(std::getline(iss,tmp,' '))
     {
-        pushDict(tmp,_eng_stop_worlds, _eng_dict);
+
+        pushDict(tmp,_eng_stop_worlds, _dict);
     }
    
 }
@@ -107,25 +103,18 @@ void DictProducer::buildCnDict( )  //创建中文字典
     
     for(auto word:words )
     {
-        pushDict(word,_ch_stop_worlds,_ch_dict);
+        pushDict(word,_ch_stop_worlds,_dict);
     }
     
 }
-void DictProducer::buildChIndex()  //创建中文索引
-{
-    for(int i=0; i< _ch_dict.size(); i++)
-    {
-        pushIndex(_ch_dict[i].first,_ch_index,i);
-    }  
-}
-void DictProducer::buildEnIndex()  //创建英文索引
-{
-    for(int i=0; i< _eng_dict.size(); i++)
-    {
-        pushIndex(_eng_dict[i].first,_eng_index,i);
-    }  
-}
 
+void DictProducer::buildIndex()
+{
+    for(int i=0; i< _dict.size(); i++)
+    {
+        pushIndex(_dict[i].first,_index,i);
+    }  
+}
 
 void DictProducer::storeDict(const string filepath, const vector<pair<string, int>> dict)  //将词典写入文件
 {
@@ -183,8 +172,7 @@ string DictProducer::getFiles()  //获取文件的绝对路径
 }
 void DictProducer::pushDict(string& word,const set<string> stop_worlds, vector<pair<string, int>>& dict)//存储某个单词
 {
-    // if(word.find(' ')!=std::string::npos)
-    // word.erase(word.find(' '));
+  
     for(auto i: word)
     {
         if(isspace(i))
@@ -313,4 +301,12 @@ void DictProducer::showIndex(const map<string, set<int>> index) const
         
     }
        
+}
+
+void replaceAll(string& str, char oldChar, char newChar) {
+size_t pos = 0;
+while ((pos = str.find(oldChar, pos)) != string::npos) {
+str.replace(pos, 1, 1, newChar);
+pos++;
+}
 }

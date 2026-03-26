@@ -4,6 +4,7 @@
 #include "TcpServer.h"
 #include "ThreadPool.h"
 #include "Mytask.h"
+#include "KeyAche.h"
 // class MyTask
 // {
 // public:
@@ -34,6 +35,7 @@ public:
 private:
     ThreadPool _pool;//线程池对象
     TcpServer _server;//TcpServer对象
+    KeyAche _keyache;
 
 };
 
