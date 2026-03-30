@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Library>
+    <Book>书本</Book>
+    <Book1 ID="1" Name="水浒传" Price="64.6">
+        <Description>108个拆迁户</Description>
+        <Page>100页</Page>
+    </Book1>
+</Library>
