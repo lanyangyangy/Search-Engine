@@ -42,6 +42,42 @@ uint64_t Quchong::compute(const string& words)
     _simhasher.make(word, _topN, u64);
     return u64;
 }
+vector<pair<string ,double>> Quchong::get_key(const string& words)
+{
+    string word = words;
+    while(1)
+    {   
+    // 建议用 size_t 接收 find 的返回值，这是最规范的写法
+    size_t m = word.find('<'); 
+    if(m != std::string::npos)
+    {
+        // 关键修复 1：从 m 的位置开始往后找 '>'
+        size_t n = word.find('>', m); 
+            
+            if(n != std::string::npos)
+            {
+                // 关键修复 2：长度加 1，把 '>' 一并抹除！
+                word.erase(m, n - m + 1); 
+
+            }
+            else 
+            {
+                // 如果只有 '<' 没有 '>'，直接跳出，防止死循环
+                break; 
+            }
+        }
+        else 
+        {
+            break;
+        }
+    }        
+        // cout<< word<<endl;
+    uint64_t u64;
+    vector<pair<string ,double> > res;
+    bool ok = _simhasher.extract(word, res, _topN);
+    _simhasher.make(word, _topN, u64);
+    return res;
+}
 
 vector<string> Quchong::config()
 {

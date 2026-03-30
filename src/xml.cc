@@ -249,7 +249,6 @@ void Xml::compute_w()
         {
            
             count[it->first] = it->second * _idf.find(it->first)->second;
-            // cout<<  _idf.find(it->first)->second<<" ";
             all_w += pow(count[it->first],2);
        
         }

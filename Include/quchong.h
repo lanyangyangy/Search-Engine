@@ -21,6 +21,7 @@ public:
     Quchong( );
     vector<string> config();//读取配置信息
     uint64_t compute(const string& words);
+    vector<pair<string ,double>> get_key(const string& words);
     
 };
 
