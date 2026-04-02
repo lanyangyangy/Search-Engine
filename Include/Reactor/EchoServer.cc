@@ -25,6 +25,7 @@ EchoServer::EchoServer(size_t threadNum, size_t queSize
                        , unsigned short port)
 : _pool(threadNum, queSize)
 , _server(ip, port)
+,_search( new Search())
 {
 
 }
@@ -64,7 +65,7 @@ void EchoServer::onMessage(const TcpConnectionPtr &con)
     string msg = con->receive();
     cout << ">>recv msg from client : " << msg << endl;
 
-    MyTask task(msg, con);
+    MyTask task(msg, con, _search);
 
     _pool.addTask(bind(&MyTask::process, task));
 

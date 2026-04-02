@@ -30,6 +30,7 @@ void Xml::jiexi(const string& dir)
     }
 
 }
+
 void Xml::jiexi_single(const string & path)
 {
     //新建一个xml文件
@@ -50,7 +51,6 @@ void Xml::jiexi_single(const string & path)
     {
         
         for (; pItem != NULL; pItem = pItem->NextSiblingElement("item")) {
-
 		// 解析属性
         TiXmlElement* titleNode = pItem->FirstChildElement("title");
         TiXmlElement* linkNode  = pItem->FirstChildElement("link");
@@ -94,18 +94,13 @@ void Xml::jiexi_single(const string & path)
          _all.push_back(doc);
 	    }
     }
-
-
 }
 
 
 
 void Xml::write()
 {
-    // ofstream offset;
-    // ofstream outfile;
-    // offset.open("./data/offset.dat", std::ios::out);
-    // outfile.open("./data/ripepage.dat", std::ios::out);
+
 
     for(int i=0; i< _all.size();i++)
     {
@@ -229,7 +224,7 @@ void Xml::compute_idf()
     for (map<string, int>::iterator it = _df.begin(); it != _df.end(); ++it)
     {
         double num = log2(_N/(it->second +1));
-        // _idf[it->first] = log2(_N/(it->second +1));
+        
         if(num>1)
         {
            _idf[it->first] =num;
@@ -250,6 +245,7 @@ void Xml::compute_w()
            
             count[it->first] = it->second * _idf.find(it->first)->second;
             all_w += pow(count[it->first],2);
+            // cout<< _idf.find(it->first)->second<<" ";
        
         }
        
@@ -257,6 +253,10 @@ void Xml::compute_w()
         {
            
             count[it->first] = count[it->first]/sqrt(all_w);
+            if(count[it->first] < 0.0001)
+            {
+                it = count.erase(it);
+            }
 
         }
 
@@ -288,10 +288,13 @@ void Xml::compute_invertindex()
         for(int i=0; i< it->second.size(); i++)
         {
            
-            outfile<< it->second[i].first<<' '
-                    << it->second[i].second;
+            outfile<< it->second[i].first<<' '<< it->second[i].second;
+            if (i < it->second.size()- 1) 
+            {
+                outfile << " "; 
+            }
         }
-          outfile<<endl;
+        outfile<<endl;
         
     }
     outfile.close();

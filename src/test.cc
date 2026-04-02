@@ -1,12 +1,13 @@
 // #include "DictProducer.h"
 // #include "cppjieba/Jieba.hpp"
-#include "SplitTool.h"
+// #include "SplitTool.h"
 // #include "KeyRecommander.h"
 // #include "Reactor/EchoServer.h"
 // #include "KeyAche.h"
 #include "quchong.h"
 #include "xml.h"
-
+#include "Search.h"
+#include "Reactor/EchoServer.h"
 // int main(int argc, char **argv)
 // {
 //     // SplitToolCppJieba* tool = new SplitToolCppJieba();
@@ -18,13 +19,26 @@
 
 //     return 0;
 // }
+void string_json(const string& json_str)
+{
+    json j = json::parse(json_str);
+    
+    cout<< j["title"]<<endl;
+    cout<< j["content"]<< endl;
 
+}
+using std::cin;
 int main()
 {
-    SplitToolCppJieba* tool = new SplitToolCppJieba();
-    Xml _xml("/home/lanlan/program/data/yuliao2",tool);
-    // Quchong quchong;
-    // string s("我是蓝翔技工拖拉机学院手扶拖拉机专业的。不用多久，我就会升职加薪，当上总经理，出任CEO，走上人生巅峰。");
-    // quchong.compute(s);
-    
+
+    // Search* search1 = new Search();
+    // string word;
+    // while(cin>>word)
+    // {
+    //     string wwww = search1->doing(word);
+    //     string_json(wwww);
+    // }
+    EchoServer server(4, 10, "127.0.0.1", 1234);
+    server.start();
+
 }

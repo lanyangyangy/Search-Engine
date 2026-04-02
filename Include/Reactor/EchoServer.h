@@ -4,16 +4,8 @@
 #include "TcpServer.h"
 #include "ThreadPool.h"
 #include "Mytask.h"
-// class MyTask
-// {
-// public:
-//     MyTask(const string &msg, const TcpConnectionPtr &con);
-//     void process();
-// private:
-//     string _msg;
-//     TcpConnectionPtr _con;
-// };
-
+#include "Search.h"
+using Search_ptr = std::shared_ptr<Search> ;
 class EchoServer
 {
 public:
@@ -34,6 +26,7 @@ public:
 private:
     ThreadPool _pool;//线程池对象
     TcpServer _server;//TcpServer对象
+    Search_ptr _search;
 
 };
 
